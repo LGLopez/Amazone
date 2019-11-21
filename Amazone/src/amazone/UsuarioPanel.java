@@ -22,8 +22,6 @@ public class UsuarioPanel extends javax.swing.JFrame {
 
     public static Producto product1;
     
-    //product1 = new Producto();
-    
     public UsuarioPanel() {
         initComponents();
     }

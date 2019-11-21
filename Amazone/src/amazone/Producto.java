@@ -1,10 +1,28 @@
 package amazone;
 
 public class Producto {
+    private String id;
     private String nombre;
-    private String categoria;
+    private String descripcion;
     private String precio;
-    private String marca;
+    private String tipo;
+
+    
+    Producto(String id, String nombre, String descripcion, String precio, String tipo) {
+       this.id = id;
+       this.nombre = nombre;
+       this.descripcion = descripcion;
+       this.tipo = tipo;
+    }
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getNombre() {
         return nombre;
@@ -14,12 +32,12 @@ public class Producto {
         this.nombre = nombre;
     }
 
-    public String getCategoria() {
-        return categoria;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public String getPrecio() {
@@ -30,11 +48,13 @@ public class Producto {
         this.precio = precio;
     }
 
-    public String getMarca() {
-        return marca;
+    public String getTipo() {
+        return tipo;
     }
 
-    public void setMarca(String marca) {
-        this.marca = marca;
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
+    
+    
 }

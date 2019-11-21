@@ -14,6 +14,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -22,9 +23,11 @@ import javax.swing.JOptionPane;
  * @author Usuario
  */
 public class EmpresaPanel extends javax.swing.JFrame {
-    public static Empresa product;
+    public static Producto product;
     
-
+    String patronNombre = "^([A-Z]{1}[a-zA-Z\\s]+)$";
+    String patronPrecio = "^([0-9]+)$";
+    
     
     public void selectFile()throws FileNotFoundException, IOException {
         JFileChooser chooser = new JFileChooser();
@@ -41,7 +44,11 @@ public class EmpresaPanel extends javax.swing.JFrame {
     }
 
      private void agregarProducto()throws FileNotFoundException, IOException, ClassNotFoundException  {
-
+       if(txtId.getText().isEmpty() || txtNombreProducto.getText().isEmpty() || jTextAreaDescripcion.getText().isEmpty()|| txtPrecio.getText().isEmpty()  ){
+           JOptionPane.showMessageDialog(this, "Faltan campos por llenar");
+           return;
+       }
+         
        String id;
        String nombre;
        String descripcion;
@@ -53,9 +60,20 @@ public class EmpresaPanel extends javax.swing.JFrame {
        descripcion = jTextAreaDescripcion.getText();
        precio = txtPrecio.getText();
        tipo = comboTipo.getSelectedItem().toString();
+       
+       Pattern a = Pattern.compile(patronNombre);
+       Pattern b = Pattern.compile(precio);
+
+        
+       if(!a.matcher(nombre).matches()){
+           JOptionPane.showMessageDialog(this, "Nombre invalido");
+       }
+       else if(!b.matcher(precio).matches()){
+           JOptionPane.showMessageDialog(this, "Precio invalido");
+       }
 
        String file = "Producto.ser";
-       product = new Empresa(id,nombre,descripcion,precio,tipo);
+       product = new Producto(id,nombre,descripcion,precio,tipo);
 
            try {
                FileOutputStream salida = new FileOutputStream(file);
@@ -67,12 +85,12 @@ public class EmpresaPanel extends javax.swing.JFrame {
                JOptionPane.showMessageDialog(this, "Error al agregar Producto");
            } 
            
-           Empresa product2 = null;
+           Producto product2 = null;
           
            try{
                 FileInputStream salida = new FileInputStream (file);
                 ObjectInputStream in = new ObjectInputStream(salida);
-                product2 = (Empresa)in.readObject();
+                product2 = (Producto)in.readObject();
                 in.close();
                 JOptionPane.showMessageDialog(this, "Se ha desserializado el producto");
            }catch (FileNotFoundException ex) {

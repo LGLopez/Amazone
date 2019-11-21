@@ -15,6 +15,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 
 /**
@@ -27,13 +28,26 @@ public class Registrar extends javax.swing.JFrame {
     
     //user = new Usuario();
     
+    String patronNombre = "^([A-Z]{1}[a-zA-Z\\s]+)$";
+    String patronApellido = "^([A-Z]{1}[a-z]+)$";
+    String patronCorreo = "^([a-zA-Z0-9_\\-\\.]+@[a-zA-Z]{5,16}\\.[a-zA-Z]{3})$";
+    
     public Registrar() {
         initComponents();
     }
     
     private void guardarUsuario()throws FileNotFoundException, IOException, ClassNotFoundException {
-       
-        String nombre;
+       if(txtNombre.getText().isEmpty() || txtAPaterno.getText().isEmpty() || txtAMaterno.getText().isEmpty()|| txtCorreo.getText().isEmpty() || txtNombreUsuario.getText().isEmpty() || txtPassword.getText().isEmpty() || txtPasswordConfirm.getText().isEmpty() ){
+            JOptionPane.showMessageDialog(this, "Faltan campos por llenar");
+            return;
+        }
+      
+        if(!txtPassword.getText().equals(txtPasswordConfirm.getText())){
+            JOptionPane.showMessageDialog(this, "La contraseña no coincide.");
+            return;
+        }
+        
+       String nombre;
        String usuario;
        String ap;
        String am;
@@ -52,6 +66,23 @@ public class Registrar extends javax.swing.JFrame {
        password = txtPassword.getText();
        passwordcon = txtPasswordConfirm.getText();
        perfil = comboPerfil.getSelectedItem().toString();
+       
+       Pattern a = Pattern.compile(patronNombre);
+       Pattern b = Pattern.compile(patronApellido);
+       Pattern c = Pattern.compile(patronCorreo);
+       
+       if(!a.matcher(nombre).matches()){
+           JOptionPane.showMessageDialog(this, "Nombre invalido");
+       }
+       else if(!b.matcher(ap).matches()){
+           JOptionPane.showMessageDialog(this, "Apellido paterno invalido");
+       }
+       else if(!b.matcher(am).matches()){
+           JOptionPane.showMessageDialog(this, "Apellido materno invalido");
+       }
+       else if(!c.matcher(correo).matches()){
+           JOptionPane.showMessageDialog(this, "Correo invalido");
+       }
 
        String file = "Usuarios.ser";
        user = new Usuario(nombre,ap,am,usuario,correo,password,passwordcon,perfil);
