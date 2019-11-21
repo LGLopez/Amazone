@@ -1,20 +1,9 @@
 package amazone;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- *
- * @author roman
- */
 public class Usuario {
     private int id;
     private String nombre;
-    private String aPaterno;
-    private String aMaterno;
+    private String apellidos;
     private String nombreUsuario;
     private String password;
     private String perfil;
@@ -44,20 +33,12 @@ public class Usuario {
         this.nombre = nombre;
     }
 
-    public String getaPaterno() {
-        return aPaterno;
+    public String getApellidos() {
+        return apellidos;
     }
 
-    public void setaPaterno(String aPaterno) {
-        this.aPaterno = aPaterno;
-    }
-
-    public String getaMaterno() {
-        return aMaterno;
-    }
-
-    public void setaMaterno(String aMaterno) {
-        this.aMaterno = aMaterno;
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
     }
 
     public String getNombreUsuario() {
