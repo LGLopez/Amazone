@@ -1,10 +1,25 @@
 package amazone;
 
 public class Empresa {
+    private String id;
     private String nombre;
-    private String jefe;
-    private String numero;
-    private String direccion;
+    private String descripcion;
+    private String precio;
+    private String tipo;
+
+    
+    Empresa(String id, String nombre, String descripcion, String precio, String tipo) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getNombre() {
         return nombre;
@@ -14,28 +29,28 @@ public class Empresa {
         this.nombre = nombre;
     }
 
-    public String getJefe() {
-        return jefe;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setJefe(String jefe) {
-        this.jefe = jefe;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
-    public String getNumero() {
-        return numero;
+    public String getPrecio() {
+        return precio;
     }
 
-    public void setNumero(String numero) {
-        this.numero = numero;
+    public void setPrecio(String precio) {
+        this.precio = precio;
     }
 
-    public String getDireccion() {
-        return direccion;
+    public String getTipo() {
+        return tipo;
     }
 
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
     
     

@@ -5,9 +5,14 @@
  */
 package amazone;
 
+import static amazone.EmpresaPanel.product;
 import static amazone.Registrar.user;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -20,14 +25,58 @@ public class Registrar extends javax.swing.JFrame {
     
     public static Usuario user;
     
-    String fileUser = "Usuarios.ser";
-    user = new Usuario();
+    //user = new Usuario();
     
     public Registrar() {
         initComponents();
     }
     
-    private void guardarUsuario()throws FileNotFoundException, IOException {
+    private void guardarUsuario()throws FileNotFoundException, IOException, ClassNotFoundException {
+       
+        String nombre;
+       String usuario;
+       String ap;
+       String am;
+       String correo;
+       String password;
+       String passwordcon;
+       String perfil;
+       String id;
+       
+       
+       nombre = txtNombre.getText();
+       ap = txtAPaterno.getText();
+       am = txtAMaterno.getText();
+       correo = txtCorreo.getText();
+       usuario = txtNombreUsuario.getText();
+       password = txtPassword.getText();
+       passwordcon = txtPasswordConfirm.getText();
+       perfil = comboPerfil.getSelectedItem().toString();
+
+       String file = "Usuarios.ser";
+       user = new Usuario(nombre,ap,am,usuario,correo,password,passwordcon,perfil);
+
+           try {
+               FileOutputStream salida = new FileOutputStream(file);
+               ObjectOutputStream out = new ObjectOutputStream (salida);
+               out.writeObject(user);
+               out.close();
+               JOptionPane.showMessageDialog(this, "Usuario Agregado Exitosamente!");
+           } catch (FileNotFoundException ex) {
+               JOptionPane.showMessageDialog(this, "Error al agregar Usuario");
+           } 
+           
+           Usuario user2 = null;
+          
+           try{
+                FileInputStream salida = new FileInputStream (file);
+                ObjectInputStream in = new ObjectInputStream(salida);
+                user2 = (Usuario)in.readObject();
+                in.close();
+                JOptionPane.showMessageDialog(this, "Se ha desserializado el usuario");
+           }catch (FileNotFoundException ex) {
+               JOptionPane.showMessageDialog(this, "Error al agregar Usuario");
+           }
         
     }
     
@@ -91,6 +140,12 @@ public class Registrar extends javax.swing.JFrame {
 
         jLabel4.setFont(new java.awt.Font("Yu Gothic Medium", 0, 14)); // NOI18N
         jLabel4.setText("Apellido Materno");
+
+        txtAMaterno.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtAMaternoActionPerformed(evt);
+            }
+        });
 
         jLabel5.setFont(new java.awt.Font("Yu Gothic Medium", 0, 14)); // NOI18N
         jLabel5.setText("Nombre de usuario");
@@ -234,7 +289,9 @@ public class Registrar extends javax.swing.JFrame {
     private void CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelarActionPerformed
        try {
             guardarUsuario();
-        } catch (IOException ex) {} 
+        } catch (IOException ex) {} catch (ClassNotFoundException ex) {
+            Logger.getLogger(Registrar.class.getName()).log(Level.SEVERE, null, ex);
+        } 
     }//GEN-LAST:event_CancelarActionPerformed
 
     private void btnGuardarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarUsuarioActionPerformed
@@ -242,6 +299,10 @@ public class Registrar extends javax.swing.JFrame {
             cancelarUsuario();
         } catch (IOException ex) {} 
     }//GEN-LAST:event_btnGuardarUsuarioActionPerformed
+
+    private void txtAMaternoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAMaternoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtAMaternoActionPerformed
 
 
     

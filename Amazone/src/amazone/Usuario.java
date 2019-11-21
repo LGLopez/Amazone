@@ -3,12 +3,40 @@ package amazone;
 public class Usuario {
     private int id;
     private String nombre;
-    private String apellidos;
+    private String ap;
+    private String am;
     private String nombreUsuario;
     private String password;
+    private String passwordcon;
     private String perfil;
     private String correo;
 
+    Usuario(String nombre, String ap, String am, String usuario, String correo, String password, String passwordcon, String perfil) {
+        this.nombre = nombre;
+        this.ap = ap;
+        this.am = am;
+        nombreUsuario = usuario;
+        this.correo = correo;
+        this.password = password;
+        this.passwordcon = passwordcon;
+        this.perfil = perfil;
+    }
+
+    public String getAp() {
+        return ap;
+    }
+
+    public void setAp(String ap) {
+        this.ap = ap;
+    }
+
+    public String getAm() {
+        return am;
+    }
+
+    public void setAm(String am) {
+        this.am = am;
+    }
     public String getCorreo() {
         return correo;
     }
@@ -33,14 +61,6 @@ public class Usuario {
         this.nombre = nombre;
     }
 
-    public String getApellidos() {
-        return apellidos;
-    }
-
-    public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
-    }
-
     public String getNombreUsuario() {
         return nombreUsuario;
     }
@@ -63,5 +83,13 @@ public class Usuario {
 
     public void setPerfil(String perfil) {
         this.perfil = perfil;
+    }
+       
+    public String getPasswordcon() {
+        return passwordcon;
+    }
+
+    public void setPasswordcon(String passwordcon) {
+        this.passwordcon = passwordcon;
     }
 }

@@ -5,8 +5,14 @@
  */
 package amazone;
 
+import static amazone.Registrar.user;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -16,8 +22,7 @@ public class UsuarioPanel extends javax.swing.JFrame {
 
     public static Producto product1;
     
-    String file = "ProductoCarrito.ser";
-    product1 = new Producto();
+    //product1 = new Producto();
     
     public UsuarioPanel() {
         initComponents();
@@ -191,6 +196,7 @@ public class UsuarioPanel extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void agregarCarrito()throws FileNotFoundException, IOException {
+       
     }
 
     private void buscarProducto()throws FileNotFoundException, IOException {

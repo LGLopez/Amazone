@@ -6,20 +6,25 @@
 package amazone;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Usuario
  */
 public class EmpresaPanel extends javax.swing.JFrame {
-
-    public static Producto product;
+    public static Empresa product;
     
-    String file = "Producto.ser";
-    product = new Producto("r");
+
     
     public void selectFile()throws FileNotFoundException, IOException {
         JFileChooser chooser = new JFileChooser();
@@ -35,8 +40,45 @@ public class EmpresaPanel extends javax.swing.JFrame {
         initComponents();
     }
 
-     private void agregarProducto()throws FileNotFoundException, IOException  {
-    
+     private void agregarProducto()throws FileNotFoundException, IOException, ClassNotFoundException  {
+
+       String id;
+       String nombre;
+       String descripcion;
+       String precio;
+       String tipo;
+       
+       id = txtId.getText();
+       nombre = txtNombreProducto.getText();
+       descripcion = jTextAreaDescripcion.getText();
+       precio = txtPrecio.getText();
+       tipo = comboTipo.getSelectedItem().toString();
+
+       String file = "Producto.ser";
+       product = new Empresa(id,nombre,descripcion,precio,tipo);
+
+           try {
+               FileOutputStream salida = new FileOutputStream(file);
+               ObjectOutputStream out = new ObjectOutputStream (salida);
+               out.writeObject(product);
+               out.close();
+               JOptionPane.showMessageDialog(this, "Producto Agregado Exitosamente!");
+           } catch (FileNotFoundException ex) {
+               JOptionPane.showMessageDialog(this, "Error al agregar Producto");
+           } 
+           
+           Empresa product2 = null;
+          
+           try{
+                FileInputStream salida = new FileInputStream (file);
+                ObjectInputStream in = new ObjectInputStream(salida);
+                product2 = (Empresa)in.readObject();
+                in.close();
+                JOptionPane.showMessageDialog(this, "Se ha desserializado el producto");
+           }catch (FileNotFoundException ex) {
+               JOptionPane.showMessageDialog(this, "Error al agregar Producto");
+           }
+
      }
 
     private void eliminarProducto()throws FileNotFoundException, IOException {
@@ -63,11 +105,11 @@ public class EmpresaPanel extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        txtId = new javax.swing.JTextField();
+        txtNombreProducto = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jTextField3 = new javax.swing.JTextField();
+        jTextAreaDescripcion = new javax.swing.JTextArea();
+        txtPrecio = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         comboTipo = new javax.swing.JComboBox<>();
         btnAgregar = new javax.swing.JButton();
@@ -100,9 +142,9 @@ public class EmpresaPanel extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel7.setText("Foto:");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        jTextAreaDescripcion.setColumns(20);
+        jTextAreaDescripcion.setRows(5);
+        jScrollPane1.setViewportView(jTextAreaDescripcion);
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel8.setText("Tipo:");
@@ -170,17 +212,17 @@ public class EmpresaPanel extends javax.swing.JFrame {
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextField2))
+                                .addComponent(txtNombreProducto))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                                         .addComponent(jLabel3)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jTextField1))
+                                        .addComponent(txtId))
                                     .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -204,12 +246,12 @@ public class EmpresaPanel extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEliminar))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtNombreProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEditar))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -219,7 +261,7 @@ public class EmpresaPanel extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(21, 21, 21)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
@@ -274,7 +316,9 @@ public class EmpresaPanel extends javax.swing.JFrame {
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
      try {
             agregarProducto();
-        } catch (IOException ex) {} 
+        } catch (IOException ex) {} catch (ClassNotFoundException ex) {
+            Logger.getLogger(EmpresaPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } 
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
@@ -314,11 +358,11 @@ public class EmpresaPanel extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextArea jTextAreaDescripcion;
     private javax.swing.JLabel lblParaImagen;
+    private javax.swing.JTextField txtId;
+    private javax.swing.JTextField txtNombreProducto;
+    private javax.swing.JTextField txtPrecio;
     // End of variables declaration//GEN-END:variables
 
 }
