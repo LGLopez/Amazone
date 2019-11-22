@@ -1,26 +1,27 @@
 package amazone;
 
-public class Usuario {
-    private int id;
+import java.io.Serializable;
+
+public class Usuario implements Serializable{
     private String nombre;
     private String ap;
     private String am;
     private String nombreUsuario;
     private String password;
-    private String passwordcon;
     private String perfil;
     private String correo;
 
-    Usuario(String nombre, String ap, String am, String usuario, String correo, String password, String passwordcon, String perfil) {
+    Usuario(String nombre, String ap, String am, String usuario, String correo, String password, String perfil) {
         this.nombre = nombre;
         this.ap = ap;
         this.am = am;
-        nombreUsuario = usuario;
+        this.nombreUsuario = usuario;
         this.correo = correo;
         this.password = password;
-        this.passwordcon = passwordcon;
         this.perfil = perfil;
     }
+
+    Usuario() {}
 
     public String getAp() {
         return ap;
@@ -43,14 +44,6 @@ public class Usuario {
 
     public void setCorreo(String correo) {
         this.correo = correo;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getNombre() {
@@ -84,12 +77,5 @@ public class Usuario {
     public void setPerfil(String perfil) {
         this.perfil = perfil;
     }
-       
-    public String getPasswordcon() {
-        return passwordcon;
-    }
 
-    public void setPasswordcon(String passwordcon) {
-        this.passwordcon = passwordcon;
-    }
 }

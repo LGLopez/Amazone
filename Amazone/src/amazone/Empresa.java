@@ -9,7 +9,7 @@ public class Empresa {
 
     
     Empresa(String id, String nombre, String descripcion, String precio, String tipo) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
     }
 
 

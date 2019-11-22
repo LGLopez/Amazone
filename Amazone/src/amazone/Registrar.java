@@ -5,16 +5,12 @@
  */
 package amazone;
 
-import static amazone.EmpresaPanel.product;
-import static amazone.Registrar.user;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 
@@ -24,9 +20,7 @@ import javax.swing.JOptionPane;
  */
 public class Registrar extends javax.swing.JFrame {
     
-    public static Usuario user;
-    
-    //user = new Usuario();
+    Usuario user;
     
     String patronNombre = "^([A-Z]{1}[a-zA-Z\\s]+)$";
     String patronApellido = "^([A-Z]{1}[a-z]+)$";
@@ -73,30 +67,36 @@ public class Registrar extends javax.swing.JFrame {
        
        if(!a.matcher(nombre).matches()){
            JOptionPane.showMessageDialog(this, "Nombre invalido");
+           return;
        }
        else if(!b.matcher(ap).matches()){
            JOptionPane.showMessageDialog(this, "Apellido paterno invalido");
+           return;
        }
        else if(!b.matcher(am).matches()){
            JOptionPane.showMessageDialog(this, "Apellido materno invalido");
+           return;
        }
        else if(!c.matcher(correo).matches()){
            JOptionPane.showMessageDialog(this, "Correo invalido");
+           return;
        }
-
-       String file = "Usuarios.ser";
-       user = new Usuario(nombre,ap,am,usuario,correo,password,passwordcon,perfil);
+       
+        String file = "Usuarios\\Usuarios.ser";
+        Usuario userToOut = new Usuario(nombre, ap, am, usuario, correo, password, perfil);
 
            try {
                FileOutputStream salida = new FileOutputStream(file);
                ObjectOutputStream out = new ObjectOutputStream (salida);
-               out.writeObject(user);
+               out.writeObject(userToOut);
                out.close();
+               //Para borrar los campos y no guardar el mismo
+               cancelarUsuario();
                JOptionPane.showMessageDialog(this, "Usuario Agregado Exitosamente!");
            } catch (FileNotFoundException ex) {
                JOptionPane.showMessageDialog(this, "Error al agregar Usuario");
            } 
-           
+           /*
            Usuario user2 = null;
           
            try{
@@ -104,14 +104,17 @@ public class Registrar extends javax.swing.JFrame {
                 ObjectInputStream in = new ObjectInputStream(salida);
                 user2 = (Usuario)in.readObject();
                 in.close();
+                
+                System.out.println(user2.getNombreUsuario());
+                
                 JOptionPane.showMessageDialog(this, "Se ha desserializado el usuario");
            }catch (FileNotFoundException ex) {
                JOptionPane.showMessageDialog(this, "Error al agregar Usuario");
            }
-        
+        */
     }
     
-    private void cancelarUsuario()throws FileNotFoundException, IOException {
+    private void cancelarUsuario(){
         txtNombre.setText("");
         txtAPaterno.setText("");
         txtAMaterno.setText("");
@@ -146,6 +149,7 @@ public class Registrar extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         txtCorreo = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
+        btnVolver = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -206,6 +210,13 @@ public class Registrar extends javax.swing.JFrame {
         jLabel10.setFont(new java.awt.Font("Yu Gothic Medium", 0, 14)); // NOI18N
         jLabel10.setText("0");
 
+        btnVolver.setText("Volver Inicio");
+        btnVolver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVolverActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -216,7 +227,9 @@ public class Registrar extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(btnGuardarUsuario)
                         .addGap(37, 37, 37)
-                        .addComponent(Cancelar))
+                        .addComponent(Cancelar)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnVolver))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -297,7 +310,8 @@ public class Registrar extends javax.swing.JFrame {
                 .addGap(40, 40, 40)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Cancelar)
-                    .addComponent(btnGuardarUsuario))
+                    .addComponent(btnGuardarUsuario)
+                    .addComponent(btnVolver))
                 .addContainerGap(66, Short.MAX_VALUE))
         );
 
@@ -318,22 +332,29 @@ public class Registrar extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelarActionPerformed
-       try {
-            guardarUsuario();
-        } catch (IOException ex) {} catch (ClassNotFoundException ex) {
-            Logger.getLogger(Registrar.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        cancelarUsuario();
     }//GEN-LAST:event_CancelarActionPerformed
 
     private void btnGuardarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarUsuarioActionPerformed
        try {
-            cancelarUsuario();
-        } catch (IOException ex) {} 
+            guardarUsuario();
+        } catch (IOException ex) {
+            System.err.println("Error al guardar usuario.");
+        } catch (ClassNotFoundException ex) {
+            System.err.println("Error al guardar usuario.");
+        } 
+         
     }//GEN-LAST:event_btnGuardarUsuarioActionPerformed
 
     private void txtAMaternoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAMaternoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtAMaternoActionPerformed
+
+    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
+        Login n = new Login();
+        n.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_btnVolverActionPerformed
 
 
     
@@ -341,6 +362,7 @@ public class Registrar extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Cancelar;
     private javax.swing.JButton btnGuardarUsuario;
+    private javax.swing.JButton btnVolver;
     private javax.swing.JComboBox<String> comboPerfil;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

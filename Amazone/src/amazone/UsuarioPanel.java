@@ -5,14 +5,8 @@
  */
 package amazone;
 
-import static amazone.Registrar.user;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -25,7 +19,12 @@ public class UsuarioPanel extends javax.swing.JFrame {
     public UsuarioPanel() {
         initComponents();
     }
-
+    
+    public UsuarioPanel(String username){
+        initComponents();
+        
+        usernameShow.setText(username);
+    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -55,7 +54,7 @@ public class UsuarioPanel extends javax.swing.JFrame {
         jLabel1.setText("Amazone");
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel2.setText("Usuario:");
+        jLabel2.setText("Bienvenido");
 
         usernameShow.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         usernameShow.setText("Username");
