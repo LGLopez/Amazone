@@ -80,7 +80,7 @@
                                       <EmptySpace min="-2" pref="69" max="-2" attributes="0"/>
                                       <Component id="btnAbrirImagen" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="comboTipo" min="-2" pref="53" max="-2" attributes="0"/>
+                                  <Component id="comboTipo" min="-2" pref="113" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="32767" attributes="0"/>
                           </Group>
@@ -99,14 +99,7 @@
                                       <Component id="txtPrecio" min="-2" pref="92" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                              <Component id="txtId" max="32767" attributes="0"/>
-                                          </Group>
-                                          <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      </Group>
+                                      <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Component id="jScrollPane1" min="-2" pref="215" max="-2" attributes="0"/>
                                   </Group>
@@ -135,11 +128,7 @@
                           <Component id="btnAgregar" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtId" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnEliminar" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="btnEliminar" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -190,14 +179,6 @@
                 <Property name="text" type="java.lang.String" value="Agregar productos"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel3">
-              <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Tahoma" size="12" style="0"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="ID: "/>
-              </Properties>
-            </Component>
             <Component class="javax.swing.JLabel" name="jLabel4">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -230,8 +211,6 @@
                 <Property name="text" type="java.lang.String" value="Foto:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="txtId">
-            </Component>
             <Component class="javax.swing.JTextField" name="txtNombreProducto">
             </Component>
             <Container class="javax.swing.JScrollPane" name="jScrollPane1">
@@ -256,13 +235,19 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Tahoma" size="12" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Tipo:"/>
+                <Property name="text" type="java.lang.String" value="Categoria:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="comboTipo">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="0"/>
+                  <StringArray count="5">
+                    <StringItem index="0" value="Electronicos"/>
+                    <StringItem index="1" value="Hogar"/>
+                    <StringItem index="2" value="Deportes"/>
+                    <StringItem index="3" value="Musica"/>
+                    <StringItem index="4" value="Videojuegos"/>
+                  </StringArray>
                 </Property>
               </Properties>
               <AuxValues>

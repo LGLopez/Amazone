@@ -1,27 +1,18 @@
 package amazone;
 
 public class Producto {
-    private String id;
     private String nombre;
     private String descripcion;
     private String precio;
     private String tipo;
-
+    private String imagen;
     
-    Producto(String id, String nombre, String descripcion, String precio, String tipo) {
-       this.id = id;
+    Producto(String nombre, String descripcion, String precio, String tipo, String imagen) {
        this.nombre = nombre;
        this.descripcion = descripcion;
        this.tipo = tipo;
-    }
-
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+       this.precio = precio;
+       this.imagen = imagen;
     }
 
     public String getNombre() {
@@ -55,6 +46,13 @@ public class Producto {
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
-    
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
+    }
     
 }

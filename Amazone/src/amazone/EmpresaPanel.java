@@ -5,6 +5,7 @@
  */
 package amazone;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -12,11 +13,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -31,12 +37,51 @@ public class EmpresaPanel extends javax.swing.JFrame {
     
     public void selectFile()throws FileNotFoundException, IOException {
         JFileChooser chooser = new JFileChooser();
+        
+        FileFilter imageFilter = new FileNameExtensionFilter("Image files", ImageIO.getReaderFileSuffixes());
+        
+        chooser.setFileFilter(imageFilter);
+        
         if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             File f = chooser.getSelectedFile();
-            // read  and/or display the file somehow. ....
+            
+            decoder(encoder64(f), "img\\" + f.getName());
+            BufferedImage img = ImageIO.read(new File("img\\" + f.getName()));
+            ImageIcon icon = new ImageIcon(img);
+            
+            lblParaImagen.setText("");
+            lblParaImagen.setIcon(icon);
+            //imgPrueba = new imagenYTexto("Prueba", icon);
+            
+            //agregar(imgPrueba);
+            
         } else {
-            // user changed their mind
+            System.err.println("Chales no quiso nah.");
         }
+    }
+    
+        public static String encoder64(File fileImage) throws FileNotFoundException, IOException{
+        String base64Image = "";
+        
+        FileInputStream imageInFile = new FileInputStream(fileImage);
+        
+        byte imageData[] = new byte[(int) fileImage.length()];
+        
+        imageInFile.read(imageData);
+        
+        base64Image = Base64.getEncoder().encodeToString(imageData);
+
+        return base64Image;
+    }
+    
+    public static String decoder(String base64Image, String pathFile) throws FileNotFoundException, IOException {
+        FileOutputStream imageOutFile = new FileOutputStream(pathFile);
+        
+        byte[] imageByteArray = Base64.getDecoder().decode(base64Image);
+        
+        imageOutFile.write(imageByteArray);
+        
+        return pathFile;
     }
     
     public EmpresaPanel() {
@@ -44,18 +89,16 @@ public class EmpresaPanel extends javax.swing.JFrame {
     }
 
      private void agregarProducto()throws FileNotFoundException, IOException, ClassNotFoundException  {
-       if(txtId.getText().isEmpty() || txtNombreProducto.getText().isEmpty() || jTextAreaDescripcion.getText().isEmpty()|| txtPrecio.getText().isEmpty()  ){
+       if(txtNombreProducto.getText().isEmpty() || jTextAreaDescripcion.getText().isEmpty()|| txtPrecio.getText().isEmpty()  ){
            JOptionPane.showMessageDialog(this, "Faltan campos por llenar");
            return;
        }
-         
-       String id;
+
        String nombre;
        String descripcion;
        String precio;
        String tipo;
-       
-       id = txtId.getText();
+
        nombre = txtNombreProducto.getText();
        descripcion = jTextAreaDescripcion.getText();
        precio = txtPrecio.getText();
@@ -73,7 +116,7 @@ public class EmpresaPanel extends javax.swing.JFrame {
        }
 
        String file = "Producto.ser";
-       product = new Producto(id,nombre,descripcion,precio,tipo);
+       product = new Producto(nombre,descripcion,precio,tipo);
 
            try {
                FileOutputStream salida = new FileOutputStream(file);
@@ -118,12 +161,10 @@ public class EmpresaPanel extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        txtId = new javax.swing.JTextField();
         txtNombreProducto = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaDescripcion = new javax.swing.JTextArea();
@@ -145,9 +186,6 @@ public class EmpresaPanel extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
         jLabel2.setText("Agregar productos");
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel3.setText("ID: ");
-
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel4.setText("Nombre:");
 
@@ -165,7 +203,9 @@ public class EmpresaPanel extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTextAreaDescripcion);
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel8.setText("Tipo:");
+        jLabel8.setText("Categoria:");
+
+        comboTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Electronicos", "Hogar", "Deportes", "Musica", "Videojuegos" }));
 
         btnAgregar.setText("Agregar");
         btnAgregar.addActionListener(new java.awt.event.ActionListener() {
@@ -221,7 +261,7 @@ public class EmpresaPanel extends javax.swing.JFrame {
                                 .addComponent(lblParaImagen)
                                 .addGap(69, 69, 69)
                                 .addComponent(btnAbrirImagen))
-                            .addComponent(comboTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(comboTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -236,12 +276,7 @@ public class EmpresaPanel extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                                        .addComponent(jLabel3)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(txtId))
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING))
+                                .addComponent(jLabel5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 105, Short.MAX_VALUE)
@@ -262,10 +297,7 @@ public class EmpresaPanel extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(btnAgregar))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEliminar))
+                .addComponent(btnEliminar)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -355,6 +387,7 @@ public class EmpresaPanel extends javax.swing.JFrame {
         try {
             guardarProducto();
         } catch (IOException ex) {} 
+        lblParaImagen.setText("Foto");
     }//GEN-LAST:event_btnGuardarActionPerformed
 
 
@@ -367,7 +400,6 @@ public class EmpresaPanel extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> comboTipo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -378,7 +410,6 @@ public class EmpresaPanel extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextAreaDescripcion;
     private javax.swing.JLabel lblParaImagen;
-    private javax.swing.JTextField txtId;
     private javax.swing.JTextField txtNombreProducto;
     private javax.swing.JTextField txtPrecio;
     // End of variables declaration//GEN-END:variables
