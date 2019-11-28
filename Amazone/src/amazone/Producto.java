@@ -7,22 +7,37 @@ public class Producto implements Serializable{
     private String descripcion;
     private String precio;
     private String tipo;
+    private String cantidad;
     private String imagen;
     
-    Producto(String nombre, String descripcion, String precio, String tipo, String imagen) {
+    Producto(String nombre, String descripcion, String precio, String tipo, String imagen,String cantidad) {
        this.nombre = nombre;
        this.descripcion = descripcion;
        this.tipo = tipo;
        this.precio = precio;
        this.imagen = imagen;
+       this.cantidad = cantidad;
     }
 
     Producto() {}
 
+    //Peoductos carrito
+    Producto(String cantidad) {
+       this.cantidad = cantidad;
+    }
+
     public String getNombre() {
         return nombre;
     }
+    
+    public String getCantidad() {
+        return cantidad;
+    }
 
+    public void setCantidad(String cantidad) {
+        this.cantidad = cantidad;
+    }
+    
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
