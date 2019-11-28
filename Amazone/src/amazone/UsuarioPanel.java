@@ -47,6 +47,7 @@ public class UsuarioPanel extends javax.swing.JFrame {
         btnEliminar = new javax.swing.JButton();
         btnVerC = new javax.swing.JButton();
         btnVerT = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -103,6 +104,13 @@ public class UsuarioPanel extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText("Volver al Inicio");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -141,8 +149,10 @@ public class UsuarioPanel extends javax.swing.JFrame {
                                         .addGap(50, 50, 50)
                                         .addComponent(jLabel5)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(0, 85, Short.MAX_VALUE))))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jButton1)
+                                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(0, 55, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -185,7 +195,8 @@ public class UsuarioPanel extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEliminar)
                     .addComponent(btnVerC)
-                    .addComponent(btnVerT))
+                    .addComponent(btnVerT)
+                    .addComponent(jButton1))
                 .addContainerGap(85, Short.MAX_VALUE))
         );
 
@@ -238,6 +249,14 @@ public class UsuarioPanel extends javax.swing.JFrame {
         } catch (IOException ex) {} 
     }//GEN-LAST:event_btnVerTActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        Login n = new Login();
+        n.setVisible(true);
+        
+        dispose();
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarC;
@@ -245,6 +264,7 @@ public class UsuarioPanel extends javax.swing.JFrame {
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnVerC;
     private javax.swing.JButton btnVerT;
+    private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBuscar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

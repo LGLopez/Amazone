@@ -11,6 +11,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 
@@ -19,7 +22,8 @@ import javax.swing.JOptionPane;
  * @author destr
  */
 public class Registrar extends javax.swing.JFrame {
-    
+    ArrayList<Usuario> paraAgregar = new ArrayList<Usuario>();
+    String toFile = "Usuarios\\Usuarios.ser";
     Usuario user;
     
     String patronNombre = "^([A-Z]{1}[a-zA-Z\\s]+)$";
@@ -28,6 +32,21 @@ public class Registrar extends javax.swing.JFrame {
     
     public Registrar() {
         initComponents();
+        
+        try {
+            leerUsuarios();
+        } catch (IOException ex) {
+            System.err.println("Excepcion de entrada y salida");
+        } catch (ClassNotFoundException ex) {
+            System.err.println("Excepcion de clases");
+        }
+    }
+    
+    private void leerUsuarios() throws FileNotFoundException, IOException, ClassNotFoundException{
+        FileInputStream entrada = new FileInputStream(toFile);
+        ObjectInputStream in = new ObjectInputStream(entrada);
+        
+        paraAgregar = (ArrayList<Usuario>) in.readObject();
     }
     
     private void guardarUsuario()throws FileNotFoundException, IOException, ClassNotFoundException {
@@ -49,7 +68,6 @@ public class Registrar extends javax.swing.JFrame {
        String password;
        String passwordcon;
        String perfil;
-       String id;
        
        
        nombre = txtNombre.getText();
@@ -81,7 +99,20 @@ public class Registrar extends javax.swing.JFrame {
            JOptionPane.showMessageDialog(this, "Correo invalido");
            return;
        }
+        
+       Usuario userToAdd = new Usuario(nombre, ap, am, usuario, correo, password, perfil);
        
+       paraAgregar.add(userToAdd);
+       
+       FileOutputStream salida = new FileOutputStream(toFile);
+       ObjectOutputStream out = new ObjectOutputStream (salida);
+       out.writeObject(paraAgregar);
+       out.close();
+       
+       cancelarUsuario();
+       
+       JOptionPane.showMessageDialog(this, "Usuario Agregado Exitosamente!");
+       /*
         String file = "Usuarios\\Usuarios.ser";
         Usuario userToOut = new Usuario(nombre, ap, am, usuario, correo, password, perfil);
 
@@ -96,7 +127,7 @@ public class Registrar extends javax.swing.JFrame {
            } catch (FileNotFoundException ex) {
                JOptionPane.showMessageDialog(this, "Error al agregar Usuario");
            } 
-           /*
+           
            Usuario user2 = null;
           
            try{

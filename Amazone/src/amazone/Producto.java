@@ -1,6 +1,8 @@
 package amazone;
 
-public class Producto {
+import java.io.Serializable;
+
+public class Producto implements Serializable{
     private String nombre;
     private String descripcion;
     private String precio;
@@ -14,6 +16,8 @@ public class Producto {
        this.precio = precio;
        this.imagen = imagen;
     }
+
+    Producto() {}
 
     public String getNombre() {
         return nombre;

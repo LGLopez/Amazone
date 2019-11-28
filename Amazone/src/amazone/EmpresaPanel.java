@@ -13,11 +13,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -29,13 +31,17 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author Usuario
  */
 public class EmpresaPanel extends javax.swing.JFrame {
-    public static Producto product;
+    ArrayList<Producto> paraCosas = new ArrayList<Producto>();
     
-    String patronNombre = "^([A-Z]{1}[a-zA-Z\\s]+)$";
+    Producto product;
+    
+    File toImage = null;
+    
+    String patronNombre = "^([A-Z]{1}[a-zA-Z\\s0-9]+)$";
     String patronPrecio = "^([0-9]+)$";
     
     
-    public void selectFile()throws FileNotFoundException, IOException {
+    public File selectFile()throws FileNotFoundException, IOException {
         JFileChooser chooser = new JFileChooser();
         
         FileFilter imageFilter = new FileNameExtensionFilter("Image files", ImageIO.getReaderFileSuffixes());
@@ -44,7 +50,7 @@ public class EmpresaPanel extends javax.swing.JFrame {
         
         if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             File f = chooser.getSelectedFile();
-            
+            toImage = f;
             decoder(encoder64(f), "img\\" + f.getName());
             BufferedImage img = ImageIO.read(new File("img\\" + f.getName()));
             ImageIcon icon = new ImageIcon(img);
@@ -54,9 +60,10 @@ public class EmpresaPanel extends javax.swing.JFrame {
             //imgPrueba = new imagenYTexto("Prueba", icon);
             
             //agregar(imgPrueba);
-            
+            return f;
         } else {
             System.err.println("Chales no quiso nah.");
+            return null;
         }
     }
     
@@ -84,8 +91,26 @@ public class EmpresaPanel extends javax.swing.JFrame {
         return pathFile;
     }
     
+    public void llenarArray() throws FileNotFoundException, IOException, ClassNotFoundException{
+        FileInputStream salida = new FileInputStream("Empresa\\Producto.ser");
+        
+        ObjectInputStream in = new ObjectInputStream(salida);
+        
+        Producto obj = null; 
+        obj = (Producto) in.readObject();
+        paraCosas.add(obj);
+        while(obj != null){
+            obj = (Producto) in.readObject();
+            paraCosas.add(obj);
+        }
+    }
+    
     public EmpresaPanel() {
         initComponents();
+        
+        try {
+            llenarArray();
+        } catch (IOException ex) {} catch (ClassNotFoundException ex) {}
     }
 
      private void agregarProducto()throws FileNotFoundException, IOException, ClassNotFoundException  {
@@ -110,13 +135,17 @@ public class EmpresaPanel extends javax.swing.JFrame {
         
        if(!a.matcher(nombre).matches()){
            JOptionPane.showMessageDialog(this, "Nombre invalido");
+           return;
        }
        else if(!b.matcher(precio).matches()){
            JOptionPane.showMessageDialog(this, "Precio invalido");
+           return;
        }
+       
+       
 
-       String file = "Producto.ser";
-       product = new Producto(nombre,descripcion,precio,tipo);
+       String file = "Empresa\\Producto.ser";
+       product = new Producto(nombre,descripcion,precio,tipo, encoder64(toImage));
 
            try {
                FileOutputStream salida = new FileOutputStream(file);
@@ -126,8 +155,13 @@ public class EmpresaPanel extends javax.swing.JFrame {
                JOptionPane.showMessageDialog(this, "Producto Agregado Exitosamente!");
            } catch (FileNotFoundException ex) {
                JOptionPane.showMessageDialog(this, "Error al agregar Producto");
-           } 
-           
+           }
+           txtNombreProducto.setText("");
+           jTextAreaDescripcion.setText("");
+           txtPrecio.setText("");
+           lblParaImagen.setIcon(null);
+           lblParaImagen.setText("Foto");
+           /*
            Producto product2 = null;
           
            try{
@@ -139,15 +173,50 @@ public class EmpresaPanel extends javax.swing.JFrame {
            }catch (FileNotFoundException ex) {
                JOptionPane.showMessageDialog(this, "Error al agregar Producto");
            }
-
+           */
      }
 
     private void eliminarProducto()throws FileNotFoundException, IOException {
     
     }
 
-    private void editarProducto()throws FileNotFoundException, IOException  {
-    
+    private void editarProducto()throws FileNotFoundException, IOException, ClassNotFoundException  {
+        Producto toCheck = null;
+        String toSearch = txtNombreProducto.getText();
+        
+        for(int i=0; i<paraCosas.size(); i++){
+            if(paraCosas.get(i).getNombre().equals(toSearch)){
+                txtNombreProducto.setText(paraCosas.get(i).getNombre());
+                jTextAreaDescripcion.setText(paraCosas.get(i).getDescripcion());
+                txtPrecio.setText(paraCosas.get(i).getTipo());
+                decoder(paraCosas.get(i).getImagen(), "Img\\imgProvisional.jpg");
+                BufferedImage img = ImageIO.read(new File("Img\\imgProvisional.jpg"));
+                ImageIcon icon = new ImageIcon(img);
+                lblParaImagen.setText("");
+                lblParaImagen.setIcon(icon);
+                
+                return;
+            }
+        }
+        
+        /*
+        while(true){
+            toCheck = (Producto) in.readObject();
+            
+            if(toCheck.getNombre().equals(toSearch)){
+               txtNombreProducto.setText(toCheck.getNombre());
+                jTextAreaDescripcion.setText(toCheck.getDescripcion());
+                txtPrecio.setText(toCheck.getTipo());
+                decoder(toCheck.getImagen(), "Img\\imgProvisional.jpg");
+                BufferedImage img = ImageIO.read(new File("Img\\imgProvisional.jpg"));
+                ImageIcon icon = new ImageIcon(img);
+                lblParaImagen.setText("");
+                lblParaImagen.setIcon(icon);
+                
+                return;
+            }
+        }
+        */
     }
 
     private void guardarProducto()throws FileNotFoundException, IOException  {
@@ -177,6 +246,7 @@ public class EmpresaPanel extends javax.swing.JFrame {
         btnGuardar = new javax.swing.JButton();
         lblParaImagen = new javax.swing.JLabel();
         btnAbrirImagen = new javax.swing.JButton();
+        btnSalirEmpresa = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -244,6 +314,13 @@ public class EmpresaPanel extends javax.swing.JFrame {
             }
         });
 
+        btnSalirEmpresa.setText("Volver al Inicio");
+        btnSalirEmpresa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirEmpresaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -258,11 +335,14 @@ public class EmpresaPanel extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(comboTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 284, Short.MAX_VALUE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(lblParaImagen)
                                 .addGap(69, 69, 69)
-                                .addComponent(btnAbrirImagen))
-                            .addComponent(comboTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(btnAbrirImagen)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnSalirEmpresa))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel1)
@@ -284,8 +364,8 @@ public class EmpresaPanel extends javax.swing.JFrame {
                             .addComponent(btnAgregar, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(btnEliminar, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(btnEditar, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnGuardar, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addGap(24, 24, 24))))
+                            .addComponent(btnGuardar, javax.swing.GroupLayout.Alignment.TRAILING))))
+                .addGap(24, 24, 24))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -320,7 +400,8 @@ public class EmpresaPanel extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(lblParaImagen)
-                    .addComponent(btnAbrirImagen))
+                    .addComponent(btnAbrirImagen)
+                    .addComponent(btnSalirEmpresa))
                 .addGap(346, 346, 346))
         );
 
@@ -367,7 +448,7 @@ public class EmpresaPanel extends javax.swing.JFrame {
      try {
             agregarProducto();
         } catch (IOException ex) {} catch (ClassNotFoundException ex) {
-            Logger.getLogger(EmpresaPanel.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println("Ya valio :c pero en agregar producto.");
         } 
     }//GEN-LAST:event_btnAgregarActionPerformed
 
@@ -380,7 +461,7 @@ public class EmpresaPanel extends javax.swing.JFrame {
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         try {
             editarProducto();
-        } catch (IOException ex) {} 
+        } catch (IOException ex) {} catch (ClassNotFoundException ex) {} 
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
@@ -390,6 +471,13 @@ public class EmpresaPanel extends javax.swing.JFrame {
         lblParaImagen.setText("Foto");
     }//GEN-LAST:event_btnGuardarActionPerformed
 
+    private void btnSalirEmpresaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirEmpresaActionPerformed
+        Login n = new Login();
+        n.setVisible(true);
+        dispose();
+
+    }//GEN-LAST:event_btnSalirEmpresaActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAbrirImagen;
@@ -397,6 +485,7 @@ public class EmpresaPanel extends javax.swing.JFrame {
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnSalirEmpresa;
     private javax.swing.JComboBox<String> comboTipo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

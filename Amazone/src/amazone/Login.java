@@ -22,10 +22,32 @@ import java.util.logging.Logger;
  */
 public class Login extends javax.swing.JFrame {
     boolean profileUser = true;
+    
+    String toFile = "Usuarios\\Usuarios.ser";
+    
+    ArrayList<Usuario> paraAgregar = new ArrayList<Usuario>();
+    
     public Login() {
         initComponents();
+        
+        paraAgregar.clear();
+        
+        try {
+            leerUsuarios();
+        } catch (IOException ex) {
+            System.err.println("Excepcion de entrada y salida");
+        } catch (ClassNotFoundException ex) {
+            System.err.println("Excepcion de clases");
+        }
     }
 
+    public void leerUsuarios() throws FileNotFoundException, IOException, ClassNotFoundException{
+        FileInputStream entrada = new FileInputStream(toFile);
+        ObjectInputStream in = new ObjectInputStream(entrada);
+        
+        paraAgregar = (ArrayList<Usuario>) in.readObject();
+    }
+    
 //    public Login(boolean toUser, Usuario toSave){
 //        if(toUser){
 //            try {
@@ -64,7 +86,6 @@ public class Login extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         txtNombreUsuario = new javax.swing.JTextField();
-        jCheckBox1 = new javax.swing.JCheckBox();
         btnEntrar = new javax.swing.JButton();
         btnRegistrar = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
@@ -81,13 +102,6 @@ public class Login extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Yu Gothic Medium", 0, 14)); // NOI18N
         jLabel2.setText("Contraseña");
-
-        jCheckBox1.setText("Mostrar Contraseña");
-        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox1ActionPerformed(evt);
-            }
-        });
 
         btnEntrar.setText("Entrar");
         btnEntrar.addActionListener(new java.awt.event.ActionListener() {
@@ -121,12 +135,10 @@ public class Login extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnEntrar, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap(103, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jCheckBox1)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(23, 23, 23))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -158,9 +170,7 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
-                .addComponent(jCheckBox1)
-                .addGap(14, 14, 14)
+                .addGap(64, 64, 64)
                 .addComponent(btnEntrar)
                 .addGap(18, 18, 18)
                 .addComponent(btnRegistrar)
@@ -172,56 +182,31 @@ public class Login extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-       
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
-
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
-        Usuario toAdd;
-        String file = "Usuarios\\Usuarios.ser", toCheckUs=txtNombreUsuario.getText(), toCheckPass=txtPassword.getText();
+        Usuario toAdd = null;
+        String toCheckUs=txtNombreUsuario.getText(), toCheckPass=txtPassword.getText();
         
-        
-        FileInputStream salida;
-        try {
-            salida = new FileInputStream (file);
-        } catch (FileNotFoundException ex) {
-            System.err.println("No se encontro el archivo de usuarios.");
-            return;
-        }
-        try {
-            ObjectInputStream in = new ObjectInputStream(salida);
-            
-            while(true){
-                toAdd = (Usuario) in.readObject();
-                //Revisar si los datos coinciden con los guardados
-                if(toCheckUs.equals(toAdd.getNombreUsuario())){
-                    //Revisar que la contraseña sea la correcta
-                    if(toCheckPass.equals(toAdd.getPassword())){
-                        //Revisar su tipo de perfil para abrir el panel correcto
-                        if(toAdd.getPerfil().equals("Usuario")){
-                            UsuarioPanel n = new UsuarioPanel(toCheckUs);
-                            n.setVisible(true);
-                            dispose();
-                            
-                        }
-                        else{
-                            EmpresaPanel n = new EmpresaPanel();
-                            n.setVisible(true);
-                            dispose();
-                        }
+        for(int i=0; i<paraAgregar.size(); i++){
+            //Revisar si los datos coinciden con los guardados
+            if(paraAgregar.get(i).getNombreUsuario().equals(toCheckUs)){
+                //Revisar que la contraseña sea la correcta
+                if(toCheckPass.equals(paraAgregar.get(i).getPassword())){
+                    //Revisar su tipo de perfil para abrir el correcto
+                    if(paraAgregar.get(i).getPerfil().equals("Usuario")){
+                        UsuarioPanel n = new UsuarioPanel(toCheckUs);
+                        n.setVisible(true);
+                        dispose();
+                        return; 
+                    }
+                    else{
+                        EmpresaPanel n = new EmpresaPanel();
+                        n.setVisible(true);
+                        dispose();
+                        return;
                     }
                 }
-                
             }
-        
-        } catch (IOException ex) {
-            System.err.println("Error en el ObjectInputStream.");
-        } catch (ClassNotFoundException ex) {
-            System.err.println("Error clase no encontrada.");
         }
-          
-        
-        
         
         
     }//GEN-LAST:event_btnEntrarActionPerformed
@@ -233,7 +218,7 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
-        // TODO add your handling code here:
+        System.exit(0);
     }//GEN-LAST:event_btnSalirActionPerformed
 
     /**
@@ -276,7 +261,6 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JButton btnEntrar;
     private javax.swing.JButton btnRegistrar;
     private javax.swing.JButton btnSalir;
-    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
