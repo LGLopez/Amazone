@@ -140,7 +140,7 @@ public class UsuarioPanel extends javax.swing.JFrame {
         txtCantidad = new javax.swing.JTextField();
         txtTotal = new javax.swing.JTextField();
         btnVerC = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnVolver = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -185,10 +185,10 @@ public class UsuarioPanel extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Volver al Inicio");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnVolver.setText("Volver al Inicio");
+        btnVolver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnVolverActionPerformed(evt);
             }
         });
 
@@ -235,7 +235,7 @@ public class UsuarioPanel extends javax.swing.JFrame {
                                         .addComponent(jLabel5)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jButton1)
+                                            .addComponent(btnVolver)
                                             .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                 .addGap(0, 52, Short.MAX_VALUE))))))
         );
@@ -271,7 +271,7 @@ public class UsuarioPanel extends javax.swing.JFrame {
                 .addGap(35, 35, 35)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnVerC)
-                    .addComponent(jButton1))
+                    .addComponent(btnVolver))
                 .addContainerGap(85, Short.MAX_VALUE))
         );
 
@@ -300,7 +300,7 @@ public class UsuarioPanel extends javax.swing.JFrame {
                 Producto toAdd = paraCosas.get(i);
                 toAdd.setCantidad(cantidad);
                 carrito.add(toAdd);
-                break;
+                
             }
         }
         
@@ -340,24 +340,29 @@ public class UsuarioPanel extends javax.swing.JFrame {
 //            mostrar += "\r\n";
 //        }
 //        JOptionPane.showMessageDialog(this, mostrar);
-       Carrito n = new Carrito();
-       n.setVisible(true);
-       dispose();
+
+    CarritoUsuario n;
+        try {
+            n = new CarritoUsuario(carrito);
+            n.setVisible(true);
+            dispose();
+        } catch (IOException ex) {}
+    
     }//GEN-LAST:event_btnVerCActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
         Login n = new Login();
         n.setVisible(true);
         dispose();
         
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnVolverActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarC;
     private javax.swing.JButton btnBuscarUs;
     private javax.swing.JButton btnVerC;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnVolver;
     private javax.swing.JComboBox<String> jComboBuscar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
