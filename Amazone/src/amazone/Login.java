@@ -193,9 +193,13 @@ public class Login extends javax.swing.JFrame {
                 if(toCheckPass.equals(paraAgregar.get(i).getPassword())){
                     //Revisar su tipo de perfil para abrir el correcto
                     if(paraAgregar.get(i).getPerfil().equals("Usuario")){
-                        UsuarioPanel n = new UsuarioPanel(toCheckUs);
-                        n.setVisible(true);
-                        dispose();
+                        UsuarioPanel n;
+                        try {
+                            n = new UsuarioPanel(toCheckUs);
+                            n.setVisible(true);
+                            dispose();
+                        } catch (IOException ex) {
+                        }
                         return; 
                     }
                     else{

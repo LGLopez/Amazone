@@ -33,6 +33,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class EmpresaPanel extends javax.swing.JFrame {
     ArrayList<Producto> paraCosas = new ArrayList<Producto>();
     
+    int toEdit = -1;
+    
     Producto product;
     
     File toImage = null;
@@ -107,6 +109,8 @@ public class EmpresaPanel extends javax.swing.JFrame {
         try {
             llenarArray();
         } catch (IOException ex) {} catch (ClassNotFoundException ex) {}
+        
+        btnGuardar.setVisible(false);
     }
 
      private void agregarProducto()throws FileNotFoundException, IOException, ClassNotFoundException  {
@@ -147,9 +151,9 @@ public class EmpresaPanel extends javax.swing.JFrame {
        
        
 
-       String file = "Empresa\\Producto.ser";
-       product = new Producto(nombre, descripcion, precio, tipo, encoder64(toImage), cantidad);
-       paraCosas.add(product);
+        String file = "Empresa\\Producto.ser";
+        product = new Producto(nombre, descripcion, precio, tipo, encoder64(toImage), cantidad);
+        paraCosas.add(product);
        
            try {
                FileOutputStream salida = new FileOutputStream(file);
@@ -181,10 +185,6 @@ public class EmpresaPanel extends javax.swing.JFrame {
            */
      }
 
-    private void eliminarProducto()throws FileNotFoundException, IOException {
-    
-    }
-
     private void editarProducto()throws FileNotFoundException, IOException, ClassNotFoundException  {
         Producto toCheck = null;
         String toSearch = txtNombreProducto.getText();
@@ -193,13 +193,19 @@ public class EmpresaPanel extends javax.swing.JFrame {
             if(paraCosas.get(i).getNombre().equals(toSearch)){
                 txtNombreProducto.setText(paraCosas.get(i).getNombre());
                 jTextAreaDescripcion.setText(paraCosas.get(i).getDescripcion());
-                txtPrecio.setText(paraCosas.get(i).getTipo());
+                txtPrecio.setText(paraCosas.get(i).getPrecio());
                 txtCantidad.setText(paraCosas.get(i).getCantidad());
                 decoder(paraCosas.get(i).getImagen(), "Img\\imgProvisional.jpg");
                 BufferedImage img = ImageIO.read(new File("Img\\imgProvisional.jpg"));
                 ImageIcon icon = new ImageIcon(img);
                 lblParaImagen.setText("");
                 lblParaImagen.setIcon(icon);
+                
+                btnAgregar.setVisible(false);
+                btnEditar.setVisible(false);
+                btnGuardar.setVisible(true);
+                
+                toEdit = i;
                 
                 return;
             }
@@ -226,6 +232,68 @@ public class EmpresaPanel extends javax.swing.JFrame {
     }
 
     private void guardarProducto()throws FileNotFoundException, IOException  {
+        if(toEdit == -1){
+            JOptionPane.showMessageDialog(this, "Posicion invalida");
+        }
+        else{
+            if(txtNombreProducto.getText().isEmpty() || jTextAreaDescripcion.getText().isEmpty()|| txtPrecio.getText().isEmpty()|| txtCantidad.getText().isEmpty()  ){
+                JOptionPane.showMessageDialog(this, "Faltan campos por llenar");
+                return;
+            }
+
+            String nombre;
+            String descripcion;
+            String precio;
+            String tipo;
+            String cantidad;
+
+            nombre = txtNombreProducto.getText();
+            descripcion = jTextAreaDescripcion.getText();
+            precio = txtPrecio.getText();
+            cantidad = txtCantidad.getText();
+            tipo = comboTipo.getSelectedItem().toString();
+
+            Pattern a = Pattern.compile(patronNombre);
+            Pattern b = Pattern.compile(patronPrecio);
+            Pattern c = Pattern.compile(patronCantidad);
+
+
+            if(!a.matcher(nombre).matches()){
+                JOptionPane.showMessageDialog(this, "Nombre invalido");
+                return;
+            }
+            else if(!b.matcher(precio).matches()){
+                JOptionPane.showMessageDialog(this, "Precio invalido");
+                return;
+            }
+            else if(!c.matcher(cantidad).matches()){
+                JOptionPane.showMessageDialog(this, "Cantidad invalida");
+                return;
+            }
+            
+            product = new Producto(nombre, descripcion, precio, tipo, encoder64(toImage), cantidad);
+            
+            String file = "Empresa\\Producto.ser";
+            paraCosas.remove(toEdit);
+            paraCosas.add(product);
+            try {
+                FileOutputStream salida = new FileOutputStream(file);
+                ObjectOutputStream out = new ObjectOutputStream (salida);
+                out.writeObject(paraCosas);
+                out.close();
+                JOptionPane.showMessageDialog(this, "Producto Agregado Exitosamente!");
+            } catch (FileNotFoundException ex) {
+                JOptionPane.showMessageDialog(this, "Error al agregar Producto");
+            }
+            
+        }
+        txtNombreProducto.setText("");
+        jTextAreaDescripcion.setText("");
+        txtPrecio.setText("");
+        txtCantidad.setText("");
+        lblParaImagen.setIcon(null);
+        lblParaImagen.setText("Foto");
+        toEdit = -1;
         
     }
     @SuppressWarnings("unchecked")
@@ -248,7 +316,6 @@ public class EmpresaPanel extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         comboTipo = new javax.swing.JComboBox<>();
         btnAgregar = new javax.swing.JButton();
-        btnEliminar = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
         lblParaImagen = new javax.swing.JLabel();
@@ -297,13 +364,6 @@ public class EmpresaPanel extends javax.swing.JFrame {
         btnAgregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAgregarActionPerformed(evt);
-            }
-        });
-
-        btnEliminar.setText("Eliminar");
-        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEliminarActionPerformed(evt);
             }
         });
 
@@ -362,10 +422,9 @@ public class EmpresaPanel extends javax.swing.JFrame {
                                         .addComponent(jLabel5)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 109, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 111, Short.MAX_VALUE)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(btnAgregar, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(btnEliminar, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(btnEditar, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(btnGuardar, javax.swing.GroupLayout.Alignment.TRAILING))
                                 .addGap(24, 24, 24))
@@ -400,11 +459,9 @@ public class EmpresaPanel extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(btnAgregar))
-                .addGap(18, 18, 18)
-                .addComponent(btnEliminar)
+                .addComponent(jLabel2)
+                .addGap(22, 22, 22)
+                .addComponent(btnAgregar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -481,12 +538,6 @@ public class EmpresaPanel extends javax.swing.JFrame {
         } 
     }//GEN-LAST:event_btnAgregarActionPerformed
 
-    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-       try {
-            eliminarProducto();
-        } catch (IOException ex) {} 
-    }//GEN-LAST:event_btnEliminarActionPerformed
-
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         try {
             editarProducto();
@@ -498,6 +549,10 @@ public class EmpresaPanel extends javax.swing.JFrame {
             guardarProducto();
         } catch (IOException ex) {} 
         lblParaImagen.setText("Foto");
+        lblParaImagen.setIcon(null);
+        btnEditar.setVisible(true);
+        btnAgregar.setVisible(true);
+        btnGuardar.setVisible(false);
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnSalirEmpresaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirEmpresaActionPerformed
@@ -516,7 +571,6 @@ public class EmpresaPanel extends javax.swing.JFrame {
     private javax.swing.JButton btnAbrirImagen;
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnEditar;
-    private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnSalirEmpresa;
     private javax.swing.JComboBox<String> comboTipo;
