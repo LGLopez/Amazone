@@ -368,12 +368,6 @@ public class UsuarioPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBuscarUsActionPerformed
 
     private void btnVerCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerCActionPerformed
-//        String mostrar = "";
-//        for(int i=0; i<carrito.size(); i++){
-//            mostrar += carrito.get(i).getNombre();
-//            mostrar += "\r\n";
-//        }
-//        JOptionPane.showMessageDialog(this, mostrar);
 
     CarritoUsuario n;
         try {
@@ -394,13 +388,21 @@ public class UsuarioPanel extends javax.swing.JFrame {
     private void btnComprarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprarActionPerformed
         Producto toBuy;
         
+        paraCosas.clear();
+        
+        try {
+            llenarArray();
+        } catch (IOException ex) {} catch (ClassNotFoundException ex) {}
+        
         int toRest, toSave, result;
         String modified;
+        boolean isStock = true;
         
-        for(int i=0; i<carrito.size(); i++){
+        for(int i=0; i<carrito.size() ; i++){
             toBuy = carrito.get(i);
             
             for(int j = 0; j<paraCosas.size(); j++){
+                
                 if(toBuy.getNombre().equals(paraCosas.get(j).getNombre())){
                     
                     toRest = Integer.parseInt(toBuy.getCantidad());
@@ -409,10 +411,13 @@ public class UsuarioPanel extends javax.swing.JFrame {
                     
                     result = toSave-toRest;
                     
-                    modified = Integer.toString(result);
-                    
-                    paraCosas.get(j).setCantidad(modified);
-                    
+                    if(result >= 0){
+                        modified = Integer.toString(result);
+                        paraCosas.get(j).setCantidad(modified);
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(this, "Las unidades de " + paraCosas.get(j).getNombre() + " se agotaron.");
+                    }
                 }
             }
             
