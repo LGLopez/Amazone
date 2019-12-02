@@ -35,6 +35,7 @@ public class UsuarioPanel extends javax.swing.JFrame {
     
     int precioT = 0;
 
+    String file = "Empresa\\Producto.ser";
     
     Producto product1;
     
@@ -213,6 +214,11 @@ public class UsuarioPanel extends javax.swing.JFrame {
         });
 
         btnComprar.setText("Comprar");
+        btnComprar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnComprarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -384,6 +390,44 @@ public class UsuarioPanel extends javax.swing.JFrame {
         dispose();
         
     }//GEN-LAST:event_btnVolverActionPerformed
+
+    private void btnComprarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprarActionPerformed
+        Producto toBuy;
+        
+        int toRest, toSave, result;
+        String modified;
+        
+        for(int i=0; i<carrito.size(); i++){
+            toBuy = carrito.get(i);
+            
+            for(int j = 0; j<paraCosas.size(); j++){
+                if(toBuy.getNombre().equals(paraCosas.get(j).getNombre())){
+                    
+                    toRest = Integer.parseInt(toBuy.getCantidad());
+                    
+                    toSave = Integer.parseInt(paraCosas.get(j).getCantidad());
+                    
+                    result = toSave-toRest;
+                    
+                    modified = Integer.toString(result);
+                    
+                    paraCosas.get(j).setCantidad(modified);
+                    
+                }
+            }
+            
+            FileOutputStream salida;
+            try {
+                salida = new FileOutputStream(file);
+                ObjectOutputStream out = new ObjectOutputStream (salida);
+                out.writeObject(paraCosas);
+                out.close();
+                JOptionPane.showMessageDialog(this, "Pagado!");
+            } catch (FileNotFoundException ex) {} catch (IOException ex) {}
+            
+        }
+        
+    }//GEN-LAST:event_btnComprarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
