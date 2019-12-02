@@ -73,6 +73,25 @@ public class UsuarioPanel extends javax.swing.JFrame {
         initComponents();
     }
     
+    public UsuarioPanel(ArrayList<Producto> temp){
+        initComponents();
+        carrito = (ArrayList<Producto>)temp.clone();
+        precioT = 0;
+        if(carrito.size()!=0){
+            for(int i =0; i<carrito.size(); i++){
+                int toMulti = Integer.parseInt(carrito.get(i).getCantidad());
+                toMulti *= Integer.parseInt(carrito.get(i).getPrecio());
+
+                precioT += toMulti;
+            }
+
+            txtTotal.setText(Integer.toString(precioT));
+        }
+        else{
+            txtTotal.setText("0");
+        }
+    }
+    
     public void agregar(imagenYTexto aImagen){
         dm.addElement(aImagen);
         
@@ -141,6 +160,7 @@ public class UsuarioPanel extends javax.swing.JFrame {
         txtTotal = new javax.swing.JTextField();
         btnVerC = new javax.swing.JButton();
         btnVolver = new javax.swing.JButton();
+        btnComprar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -192,6 +212,8 @@ public class UsuarioPanel extends javax.swing.JFrame {
             }
         });
 
+        btnComprar.setText("Comprar");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -232,11 +254,14 @@ public class UsuarioPanel extends javax.swing.JFrame {
                                             .addComponent(txtCantidad)))
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(50, 50, 50)
-                                        .addComponent(jLabel5)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(btnVolver)
-                                            .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel5)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(btnVolver)
+                                                    .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                            .addComponent(btnComprar))))
                                 .addGap(0, 52, Short.MAX_VALUE))))))
         );
         layout.setVerticalGroup(
@@ -253,7 +278,11 @@ public class UsuarioPanel extends javax.swing.JFrame {
                     .addComponent(jComboBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBuscarUs)
                     .addComponent(jLabel3))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(51, 51, 51)
                         .addComponent(btnAgregarC)
@@ -264,11 +293,10 @@ public class UsuarioPanel extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(35, 35, 35)
+                            .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnComprar)
+                        .addGap(18, 18, 18)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnVerC)
                     .addComponent(btnVolver))
@@ -311,20 +339,20 @@ public class UsuarioPanel extends javax.swing.JFrame {
         filtrar(jComboBuscar.getSelectedItem().toString());
     }
 
-    private void eliminarProducto()throws FileNotFoundException, IOException {
-    }
-
     private void btnAgregarCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarCActionPerformed
         try {
             agregarCarrito();
         } catch (IOException ex) {} 
-        
+        precioT = 0;
         for(int i =0; i<carrito.size(); i++){
-            precioT += Integer.parseInt(carrito.get(i).getPrecio());
+            int toMulti = Integer.parseInt(carrito.get(i).getCantidad());
+            toMulti *= Integer.parseInt(carrito.get(i).getPrecio());
+            
+            precioT += toMulti;
         }
         
         txtTotal.setText(Integer.toString(precioT));
-        
+        txtCantidad.setText("");
     }//GEN-LAST:event_btnAgregarCActionPerformed
 
     private void btnBuscarUsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarUsActionPerformed
@@ -361,6 +389,7 @@ public class UsuarioPanel extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarC;
     private javax.swing.JButton btnBuscarUs;
+    private javax.swing.JButton btnComprar;
     private javax.swing.JButton btnVerC;
     private javax.swing.JButton btnVolver;
     private javax.swing.JComboBox<String> jComboBuscar;
